@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Sentiment Analysis</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
+        h1 { margin-top: 20px; }
+        .container { display: flex; justify-content: space-around; margin-top: 20px; }
+        .category { width: 30%; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        .positive { border-top: 5px solid green; }
+        .neutral { border-top: 5px solid gray; }
+        .negative { border-top: 5px solid red; }
+        .comment { background: #eaeaea; padding: 10px; margin: 10px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>YouTube Comment Sentiment Analysis</h1>
+    <input type="text" id="videoId" placeholder="Enter YouTube Video ID">
+    <button onclick="fetchSentiment()">Analyze</button>
+
+    <div class="container">
+        <div class="category positive">
+            <h2>Positive Comments</h2>
+            <div id="positive-comments"></div>
+        </div>
+        <div class="category neutral">
+            <h2>Neutral Comments</h2>
+            <div id="neutral-comments"></div>
+        </div>
+        <div class="category negative">
+            <h2>Negative Comments</h2>
+            <div id="negative-comments"></div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchSentiment() {
+            const videoId = document.getElementById("videoId").value;
+            if (!videoId) return alert("Please enter a Video ID");
+
+            const response = await fetch(`/sentiment/${videoId}`);
+            const data = await response.json();
+
+            document.getElementById("positive-comments").innerHTML = data.positive.map(c => `<div class="comment">${c}</div>`).join("");
+            document.getElementById("neutral-comments").innerHTML = data.neutral.map(c => `<div class="comment">${c}</div>`).join("");
+            document.getElementById("negative-comments").innerHTML = data.negative.map(c => `<div class="comment">${c}</div>`).join("");
+        }
+    </script>
+</body>
+</html>
